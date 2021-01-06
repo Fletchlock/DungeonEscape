@@ -24,7 +24,7 @@ void UWorldPosition::BeginPlay()
 	
 	FString ObjectPosition = GetOwner()->GetActorLocation().ToString();
 
-	const FVector NewLocation = FVector(-80, 190, 70);
+	const FVector NewLocation = FVector(-80, 190, 90);
 	
 	UE_LOG(LogTemp, Warning, TEXT("%s location : %s"), *ObjectName, *ObjectPosition);
 
