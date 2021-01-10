@@ -26,6 +26,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void OpenDoor(float DeltaTime);
+	void CloseDoor(float DletaTime);
 
 private:
 
@@ -33,14 +34,22 @@ private:
 	float CurrentYaw;
 	
 	UPROPERTY(EditAnywhere, Category = "Door Properties", meta = (ClampMin = "-90.0", ClampMax = "90.0"))
-	float TargetOpenYaw = -90.0f;
+	float DoorOpenAngle = -90.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Door Properties", meta = (ClampMin = "0.1", ClampMax = "10.0"))
 	float DoorOpenSpeed = 2.f;
 
+	UPROPERTY(EditAnywhere, Category = "Door Properties", meta = (ClampMin = "0.1", ClampMax = "10.0"))
+	float DoorCloseSpeed = 2.f;
+
+	UPROPERTY(EditAnywhere, Category = "Door Properties", meta = (ClampMin = "0.1", ClampMax = "10.0"))
+	float DoorCloseDelay = 2.f;
+	
 	UPROPERTY(EditAnywhere, Category = "Door Properties")
 	ATriggerVolume* PressurePlate;
 
 	UPROPERTY(EditAnywhere, Category = "Door Properties")
 	AActor* OverlappingActor;
+
+	float DoorLastOpened = 0.f;
 };
