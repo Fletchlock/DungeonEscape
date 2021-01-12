@@ -23,8 +23,12 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogTemp, Warning, TEXT("Grabber reporting for duty!"));
-	
+	// Check for Physics Handle Component
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	if (!PhysicsHandle)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Physics Handle Component found on %s"), *GetOwner()->GetName());
+	}
 }
 
 
@@ -41,22 +45,12 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		OUT PlayerViewPointLocation,
 		OUT PlayerViewPointRotation
 	);
-
-	// Logging out to test
-	//FString Location = PlayerViewPointLocation.ToString();
-	//FString Rotation = PlayerViewPointRotation.ToString();
-	UE_LOG(LogTemp, Warning, TEXT("Players ViewPoint Location : %s Players ViewPoint Rotation : %s"),
-		*PlayerViewPointLocation.ToString(),
-		*PlayerViewPointRotation.ToString()
-	);
-
-	//Set variables for line trace
 	
+	//Set variables for line trace and DrawDebugLine()
 	FColor TraceColor = { 255, 0, 0 };
 	FVector LineStart = PlayerViewPointLocation;
 	FVector LineEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Range;
 
-	// Ray-cast (line trace) out to certain distance (Reach)
 	DrawDebugLine(
 		GetWorld(),
 		LineStart,
@@ -68,8 +62,25 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		2.f
 	);
 
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+	FHitResult Hit;
+	// Ray-cast (line trace) out to certain distance (Reach)
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT Hit,
+		LineStart,
+		LineEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		TraceParams
+		);
 
 	// See what we are hitting
+	AActor* HitResult =  Hit.GetActor();
 
+	if (HitResult)
+	{
+	UE_LOG(LogTemp, Warning, TEXT("Hit : %s"), *(HitResult->GetName()));
+	}
+
+	// Logging out to test
 }
 
