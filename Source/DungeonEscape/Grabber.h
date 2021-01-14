@@ -26,7 +26,7 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	float Range = 200.f;
+	float Range = 100.f;
 
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 	UInputComponent* InputComponent = nullptr;
