@@ -51,16 +51,18 @@ void UGrabber::Grab()
 	// TODO Only raycast when Grab pressed and try to reach any actors with physics collision channel set
 	FHitResult HitResult = GetFirstPhysicsBodyInReach();
 	UPrimitiveComponent* ComponentToGrab = HitResult.GetComponent();
+	AActor* ActorHit = HitResult.GetActor();
 
 	// If we hit something then attach the physics handle
-	if (HitResult.GetActor())
+	if (ActorHit)
 	{
+		if (!PhysicsHandle) { return; }
 		PhysicsHandle->GrabComponentAtLocation
-		(
-		ComponentToGrab,
-		NAME_None,
-		GetGrabRange()
-		);
+			(
+			ComponentToGrab,
+			NAME_None,
+			GetGrabRange()
+			);
 	}
 }
 
@@ -76,6 +78,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 	
 	// If the physics handle is attached
+	if (!PhysicsHandle) { return; }
 	if (PhysicsHandle->GrabbedComponent)
 	{
 		// Move the object we are holding

@@ -48,10 +48,10 @@ private:
 	
 
 	UPROPERTY(EditAnywhere, Category = "Door Properties")
-	AActor* OverlappingActor;
+	AActor* OverlappingActor = nullptr;
 	
 	UPROPERTY(EditAnywhere, Category = "Pressure Plate")
-	ATriggerVolume* PressurePlate;
+	ATriggerVolume* PressurePlate = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Pressure Plate")
 	float MassToOpenDoor = 50.f;

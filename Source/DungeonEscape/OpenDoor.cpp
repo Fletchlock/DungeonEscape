@@ -32,7 +32,7 @@ void UOpenDoor::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s has the open door compenet on it, but no pressure plate set!"), *GetOwner()->GetName());
 	}
-
+	if (!OverlappingActor) { UE_LOG(LogTemp, Error, TEXT("No OverLappingActor")); return; }
 	OverlappingActor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
 
@@ -42,6 +42,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!PressurePlate) { return; }
 	if (PressurePlate && TotalMassOfActors() > MassToOpenDoor)
 	{
 		OpenDoor(DeltaTime);
