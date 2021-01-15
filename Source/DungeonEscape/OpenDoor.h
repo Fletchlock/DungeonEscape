@@ -27,6 +27,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void OpenDoor(float DeltaTime);
 	void CloseDoor(float DletaTime);
+	float TotalMassOfActors() const;
 
 private:
 
@@ -45,11 +46,15 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Door Properties", meta = (ClampMin = "0.1", ClampMax = "10.0"))
 	float DoorCloseDelay = 2.f;
 	
-	UPROPERTY(EditAnywhere, Category = "Door Properties")
-	ATriggerVolume* PressurePlate;
 
 	UPROPERTY(EditAnywhere, Category = "Door Properties")
 	AActor* OverlappingActor;
+	
+	UPROPERTY(EditAnywhere, Category = "Pressure Plate")
+	ATriggerVolume* PressurePlate;
+
+	UPROPERTY(EditAnywhere, Category = "Pressure Plate")
+	float MassToOpenDoor = 50.f;
 
 	float DoorLastOpened = 0.f;
 };
