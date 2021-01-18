@@ -46,10 +46,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Door Properties", meta = (ClampMin = "0.1", ClampMax = "10.0"))
 	float DoorCloseDelay = 2.f;
 	
-
-	UPROPERTY(EditAnywhere, Category = "Door Properties")
-	AActor* OverlappingActor = nullptr;
-	
 	UPROPERTY(EditAnywhere, Category = "Pressure Plate")
 	ATriggerVolume* PressurePlate = nullptr;
 
