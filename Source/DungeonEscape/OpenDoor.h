@@ -25,14 +25,22 @@ protected:
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void FindAudioComponent();
+	void CheckForPressurePlate() const;
 	void OpenDoor(float DeltaTime);
 	void CloseDoor(float DletaTime);
 	float TotalMassOfActors() const;
+
+	bool doorSoundPlaying = false;
+	
 
 private:
 
 	float InitialYaw;
 	float CurrentYaw;
+
+	UPROPERTY()
+	UAudioComponent* AudioComponent = nullptr;
 	
 	UPROPERTY(EditAnywhere, Category = "Door Properties", meta = (ClampMin = "-90.0", ClampMax = "90.0"))
 	float DoorOpenAngle = -90.0f;

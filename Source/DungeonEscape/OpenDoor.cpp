@@ -3,6 +3,7 @@
 
 #include "OpenDoor.h"
 #include "Components/PrimitiveComponent.h"
+#include "Components/AudioComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Actor.h"
@@ -27,10 +28,8 @@ void UOpenDoor::BeginPlay()
 	CurrentYaw = InitialYaw;
 	DoorOpenAngle += InitialYaw;
 
-	if (!PressurePlate)
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s has the open door compenet on it, but no pressure plate set!"), *GetOwner()->GetName());
-	}
+	CheckForPressurePlate();
+	FindAudioComponent();
 }
 
 // Called every frame
@@ -39,7 +38,7 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	if (!PressurePlate) { return; }
-	if (PressurePlate && TotalMassOfActors() > MassToOpenDoor)
+	if (TotalMassOfActors() > MassToOpenDoor)
 	{
 		OpenDoor(DeltaTime);
 		DoorLastOpened = GetWorld()->GetTimeSeconds();
@@ -53,12 +52,29 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 	}
 }
 
+void UOpenDoor::FindAudioComponent()
+{
+	AudioComponent = GetOwner()->FindComponentByClass<UAudioComponent>();
+
+	if (!AudioComponent)
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Audio Component Found on %s!"), *GetOwner()->GetName());
+	}
+
+}
+
 void UOpenDoor::OpenDoor(float DeltaTime)
 {
 	CurrentYaw = FMath::FInterpTo(CurrentYaw, DoorOpenAngle, DeltaTime, DoorOpenSpeed);
 	FRotator OpenDoorRotation = GetOwner()->GetActorRotation();
 	OpenDoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(OpenDoorRotation);
+
+	if (!doorSoundPlaying && AudioComponent)
+	{
+		AudioComponent->Play();
+	}
+	doorSoundPlaying = true;
 }
 
 void UOpenDoor::CloseDoor(float DeltaTime)
@@ -67,6 +83,12 @@ void UOpenDoor::CloseDoor(float DeltaTime)
 	FRotator OpenDoorRotation = GetOwner()->GetActorRotation();
 	OpenDoorRotation.Yaw = CurrentYaw;
 	GetOwner()->SetActorRotation(OpenDoorRotation);
+
+	if (doorSoundPlaying && AudioComponent)
+	{
+		AudioComponent->Play();
+	}
+	doorSoundPlaying = false;
 }
 
 float UOpenDoor::TotalMassOfActors() const
@@ -83,5 +105,13 @@ float UOpenDoor::TotalMassOfActors() const
 		TotalMass += Actor->FindComponentByClass<UPrimitiveComponent>()->GetMass();
 	}
 	return TotalMass;
+}
+
+void UOpenDoor::CheckForPressurePlate() const
+{
+	if (!PressurePlate)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has the open door compenet on it, but no pressure plate set!"), *GetOwner()->GetName());
+	}
 }
 

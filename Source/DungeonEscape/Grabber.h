@@ -28,7 +28,9 @@ protected:
 private:
 	float Range = 100.f;
 
+	UPROPERTY()
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
+	UPROPERTY()
 	UInputComponent* InputComponent = nullptr;
 	
 	void Grab();
